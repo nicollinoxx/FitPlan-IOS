@@ -1,120 +1,62 @@
+import HotwireNative
 import UIKit
-@preconcurrency import WebKit
-import SafariServices
-import Turbo
-import Strada
 
 final class SceneDelegate: UIResponder {
-
     var window: UIWindow?
-    private let rootURL = TurboNativeProject.homeURL
-    private var navigationController: TurboNavigationController!
 
-    // MARK: - Setup
-
-    private func configureRootViewController() {
-        navigationController = window!.rootViewController as? TurboNavigationController
-        navigationController.navigationBar.scrollEdgeAppearance = .init()
-        navigationController.session = session
-        navigationController.modalSession = modalSession
-    }
-
-    // MARK: - Authentication
+    private lazy var tabBarController = TabBarController(navigatorDelegate: self, lazyLoadTabs: true)
 
     private func promptForAuthentication() {
-        let authURL = TurboNativeProject.signInURL
-        let properties = pathConfiguration.properties(for: authURL)
-        navigationController.route(url: authURL, options: VisitOptions(), properties: properties)
+        // Clean up empty screen from 401 response.
+        tabBarController.activeNavigator.pop(animated: false)
+        tabBarController.activeNavigator.route(FitPlan.signInURL)
     }
 
-    // MARK: - Sessions
-
-    private lazy var session = makeSession()
-    private lazy var modalSession = makeSession()
-
-    private func makeSession() -> Session {
-        let webView = WKWebView(frame: .zero, configuration: .appConfiguration)
-        webView.uiDelegate = self
-        webView.allowsLinkPreview = false
-
-        Bridge.initialize(webView) // Initialize Strada bridge.
-
-        let session = Session(webView: webView)
-        session.delegate = self
-        session.pathConfiguration = pathConfiguration
-
-        return session
+    private func noticeMessage(from url: URL) -> String? {
+        URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.first(where: { $0.name == "notice" })?.value
     }
-
-    // MARK: - Path Configuration
-
-    private lazy var pathConfiguration = PathConfiguration(sources: [
-        .file(Bundle.main.url(forResource: "path-configuration", withExtension: "json")!),
-    ])
 }
 
 extension SceneDelegate: UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let _ = (scene as? UIWindowScene) else { return }
-        configureRootViewController()
-        navigationController.route(url: rootURL, options: VisitOptions(action: .replace), properties: [:])
+        guard let windowScene = scene as? UIWindowScene else { return }
+
+        window = UIWindow(windowScene: windowScene)
+        window?.rootViewController = tabBarController
+        window?.makeKeyAndVisible()
+
+        tabBarController.load(HotwireTab.all)
     }
 }
 
-extension SceneDelegate: SessionDelegate {
-    func session(_ session: Session, didProposeVisit proposal: VisitProposal) {
-        navigationController.route(url: proposal.url, options: proposal.options, properties: proposal.properties)
-    }
+extension SceneDelegate: NavigatorDelegate {
+    func handle(proposal: VisitProposal, from navigator: Navigator) -> ProposalResult {
+        // A link to another tab's start page selects that tab instead of opening
+        // the page inside this one, so the tab bar never highlights the wrong tab.
+        if tabBarController.selectTab(for: proposal.url, from: navigator) {
+            return .reject
+        }
 
-    func session(_ session: Session, openExternalURL url: URL) {
-        if url.host == rootURL.host, !url.pathExtension.isEmpty {
-            navigationController.present(SFSafariViewController(url: url), animated: true)
-        } else {
-            UIApplication.shared.open(url)
+        // Display notice messages natively
+        if let message = noticeMessage(from: proposal.url) {
+            tabBarController.presentToast(message.replacingOccurrences(of: "+", with: " "))
+        }
+
+        switch proposal.viewController {
+        case NumbersViewController.pathConfigurationIdentifier:
+            return .acceptCustom(NumbersViewController(title: "Numbers"))
+        default:
+            return .accept
         }
     }
 
-    func session(_ session: Session, didFailRequestForVisitable visitable: Visitable, error: Error) {
-        if let turboError = error as? TurboError, case let .http(statusCode) = turboError, statusCode == 401 {
+    func visitableDidFailRequest(_ visitable: any Visitable, error: HotwireNativeError, retryHandler: RetryBlock?) {
+        switch error {
+        case .http(.client(.unauthorized)):
             promptForAuthentication()
-        } else if let errorPresenter = visitable as? ErrorPresenter {
-            errorPresenter.presentError(error) { session.reload() }
-        } else {
-            fatalError("Visit failed!")
-        }
-    }
-
-    func sessionDidFinishFormSubmission(_ session: Session) {
-        if (session == modalSession) {
-            self.session.clearSnapshotCache()
-        }
-    }
-
-    func sessionWebViewProcessDidTerminate(_ session: Session) {
-        session.reload()
-    }
-}
-
-//extension SceneDelegate: WKUIDelegate {
-    //func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
-        //let confirm = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        //confirm.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in completionHandler(false) })
-        //confirm.addAction(UIAlertAction(title: "OK", style: .default) { _ in completionHandler(true) })
-        //navigationController.present(confirm, animated: true)
-    //}
-//}
-
-extension SceneDelegate: WKUIDelegate {
-    func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
-        let confirm = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        confirm.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in completionHandler(false) })
-        confirm.addAction(UIAlertAction(title: "OK", style: .default) { _ in completionHandler(true) })
-
-        if let presentingViewController = window?.rootViewController?.presentedViewController {
-            presentingViewController.present(confirm, animated: true)
-        } else {
-            if let rootViewController = window?.rootViewController {
-                rootViewController.present(confirm, animated: true)
+        default:
+            if let errorPresenter = visitable as? ErrorPresenter {
+                errorPresenter.presentError(error, retryHandler: retryHandler)
             }
         }
     }

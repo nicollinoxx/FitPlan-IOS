@@ -1,5 +1,5 @@
 import Foundation
-import Strada
+import HotwireNative
 
 extension BridgeComponent {
     static var allTypes: [BridgeComponent.Type] {
