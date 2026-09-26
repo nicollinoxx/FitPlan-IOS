@@ -55,6 +55,9 @@ final class TabBarController: HotwireTabBarController {
     }
 
     private func isStartPage(_ url: URL, of tab: HotwireTab) -> Bool {
+        // Rails links some pages with an explicit .html format (/sheets.html).
+        let url = url.pathExtension == "html" ? url.deletingPathExtension() : url
+
         // The Rails root renders the sheets index, so it belongs to the first tab.
         let path = ["", "/"].contains(url.path) ? FitPlan.sheetsURL.path : url.path
         return url.host == tab.url.host && path == tab.url.path

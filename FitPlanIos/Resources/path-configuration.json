@@ -3,7 +3,7 @@
   "rules": [
     { "patterns": [".*"], "properties": { "query_string_presentation": "replace" } },
     { "patterns": ["/new$", "/edit$", "/sign_in$", "/strada-form$"], "properties": { "context": "modal", "pull_to_refresh_enabled": false } },
-    { "patterns": ["^/?$", "^/sheets$", "^/sheets/shares$", "^/dashboard$", "^/social/profiles$", "^/identity/profile$", "/welcome$"], "properties": { "presentation": "replace_root", "animated": false } },
+    { "patterns": ["^/?$", "^/sheets(\\.html)?$", "^/sheets/shares(\\.html)?$", "^/dashboard$", "^/social/profiles$", "^/identity/profile$", "/welcome$"], "properties": { "presentation": "replace_root", "animated": false } },
     { "patterns": ["/numbers$"], "properties": { "view_controller": "numbers" } },
     { "patterns": ["/welcome$", "/sign_in$", "/sign_up$", "/identity/password_reset", "/auth/failure$"], "properties": { "tab_bar": "hidden" } }
   ]
