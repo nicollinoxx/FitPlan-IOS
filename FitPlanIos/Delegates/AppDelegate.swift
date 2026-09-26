@@ -15,10 +15,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
 
-    // Make navigation and tab bars opaque, tinted with the brand color.
+    // Opaque navigation and tab bars, so screens are laid out between them
+    // instead of underneath: a translucent bar let a freshly pushed page paint
+    // behind the navigation bar until the first scroll.
     private func configureAppearance() {
-        UINavigationBar.appearance().scrollEdgeAppearance = .init()
-        UITabBar.appearance().scrollEdgeAppearance = .init()
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.configureWithOpaqueBackground()
+        UINavigationBar.appearance().standardAppearance = navigationBarAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
+        UINavigationBar.appearance().isTranslucent = false
+
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithOpaqueBackground()
+        UITabBar.appearance().standardAppearance = tabBarAppearance
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+        UITabBar.appearance().isTranslucent = false
         UITabBar.appearance().tintColor = UIColor(named: "BrandColor")
     }
 
