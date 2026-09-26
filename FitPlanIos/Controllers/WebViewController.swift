@@ -35,7 +35,16 @@ final class WebViewController: HotwireWebViewController {
     // Screens that sign the user in declare "tab_bar": "hidden" in the path
     // configuration, since there is nothing to switch to until there is a session.
     private func updateTabBarVisibility() {
+        guard let tabBarController else { return }
+
         let properties = Hotwire.config.pathConfiguration.properties(for: currentVisitableURL)
-        tabBarController?.tabBar.isHidden = properties["tab_bar"] as? String == "hidden"
+        let hidden = properties["tab_bar"] as? String == "hidden"
+
+        // The bars are opaque, so screens stop above the tab bar. Without it,
+        // extend the screen down into the space it leaves.
+        tabBarController.tabBar.isHidden = hidden
+        extendedLayoutIncludesOpaqueBars = hidden
+        edgesForExtendedLayout = hidden ? .bottom : .all
+        navigationController?.view.setNeedsLayout()
     }
 }
