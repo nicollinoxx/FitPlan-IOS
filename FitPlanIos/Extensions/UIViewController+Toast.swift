@@ -33,12 +33,12 @@ public class ToastView: UIView {
         self.init(frame: .zero)
 
         self.alpha = .zero
-        self.backgroundColor = .black
+        self.backgroundColor = .label
         self.layer.cornerRadius = 10
 
         let messageLabel = UILabel()
         messageLabel.text = message
-        messageLabel.textColor = .white
+        messageLabel.textColor = .systemBackground
         messageLabel.textAlignment = .center
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
 
