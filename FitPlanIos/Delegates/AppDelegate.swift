@@ -30,7 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBar.appearance().standardAppearance = tabBarAppearance
         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
         UITabBar.appearance().isTranslucent = false
-        UITabBar.appearance().tintColor = UIColor(named: "BrandColor")
     }
 
     private func configureHotwire() {
