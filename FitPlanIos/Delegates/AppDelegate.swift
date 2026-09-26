@@ -37,6 +37,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Hotwire.loadPathConfiguration(from: [
             .file(Bundle.main.url(forResource: "path-configuration", withExtension: "json")!)
         ])
+        // Rules match the path alone, so /sign_in?email_hint=... is still the modal
+        // sign in page and /sheets?type=diet still the sheets start page.
+        Hotwire.config.pathConfiguration.matchQueryStrings = false
 
         Hotwire.registerBridgeComponents(BridgeComponent.allTypes)
 
