@@ -26,6 +26,10 @@ final class WebViewController: HotwireWebViewController {
     override func visitableDidRender() {
         super.visitableDidRender()
         updateTabBarVisibility()
+
+        if let navigationController, let tabBarController = tabBarController as? TabBarController {
+            tabBarController.pageDidRender(in: navigationController)
+        }
     }
 
     // Screens that sign the user in declare "tab_bar": "hidden" in the path

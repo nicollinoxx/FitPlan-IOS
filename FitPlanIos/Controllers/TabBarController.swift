@@ -28,7 +28,7 @@ final class TabBarController: HotwireTabBarController {
               let current = currentTab, target != HotwireTab.all.firstIndex(of: current) else { return false }
 
         navigator.rootViewController.dismiss(animated: true)
-        willSelect(HotwireTab.all[target])
+        resetIfSessionChanged(HotwireTab.all[target])
 
         if #available(iOS 18.0, *) {
             selectedTab = tabs[target]
@@ -38,6 +38,14 @@ final class TabBarController: HotwireTabBarController {
 
         activeNavigator.start()
         return true
+    }
+
+    /// Records the Rails session a tab's page rendered under. Called by every
+    /// page on the tabs' main stacks, so the record always matches what the tab
+    /// is showing -- even when signing in from one tab switches to another.
+    func pageDidRender(in navigationController: UINavigationController) {
+        guard let tab = HotwireTab.all.first(where: { navigator(for: $0)?.rootViewController === navigationController }) else { return }
+        currentSessionToken { [weak self] in self?.renderedSessionTokens[tab.id] = $0 }
     }
 
     // MARK: - Private
@@ -60,15 +68,8 @@ final class TabBarController: HotwireTabBarController {
             return false
         }
 
-        willSelect(tab)
-        return true
-    }
-
-    private func willSelect(_ tab: HotwireTab) {
-        if let currentTab {
-            currentSessionToken { [weak self] in self?.renderedSessionTokens[currentTab.id] = $0 }
-        }
         resetIfSessionChanged(tab)
+        return true
     }
 
     /// Each tab keeps whatever page it landed on, so signing in or out leaves the
@@ -78,12 +79,8 @@ final class TabBarController: HotwireTabBarController {
     /// otherwise keep their history.
     private func resetIfSessionChanged(_ tab: HotwireTab) {
         currentSessionToken { [weak self] token in
-            guard let self else { return }
-
-            if let renderedSessionToken = renderedSessionTokens[tab.id], renderedSessionToken != token {
-                reset(tab)
-            }
-            renderedSessionTokens[tab.id] = token
+            guard let self, let renderedSessionToken = renderedSessionTokens[tab.id], renderedSessionToken != token else { return }
+            reset(tab)
         }
     }
 
