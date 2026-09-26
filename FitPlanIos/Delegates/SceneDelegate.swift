@@ -26,6 +26,11 @@ extension SceneDelegate: UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
 
         tabBarController.load(HotwireTab.all)
+
+        for tab in HotwireTab.all {
+            guard let navigator = tabBarController.navigator(for: tab) else { continue }
+            navigator.webkitUIDelegate = LocalizedUIController(delegate: navigator)
+        }
     }
 }
 
@@ -44,7 +49,7 @@ extension SceneDelegate: NavigatorDelegate {
 
         switch proposal.viewController {
         case NumbersViewController.pathConfigurationIdentifier:
-            return .acceptCustom(NumbersViewController(title: "Numbers"))
+            return .acceptCustom(NumbersViewController(title: String(localized: "Numbers")))
         default:
             return .accept
         }

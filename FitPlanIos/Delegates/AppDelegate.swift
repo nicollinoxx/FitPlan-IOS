@@ -41,6 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Hotwire.registerBridgeComponents(BridgeComponent.allTypes)
 
         Hotwire.config.defaultViewController = { url in WebViewController(url: url) }
+        Hotwire.config.makeCustomErrorView = { error, handler in LocalizedErrorView(error: error, handler: handler) }
 #if DEBUG
         Hotwire.config.debugLoggingEnabled = true
 #endif

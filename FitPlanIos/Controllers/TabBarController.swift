@@ -4,11 +4,11 @@ import WebKit
 
 extension HotwireTab {
     static let all = [
-        HotwireTab(id: "sheets",    title: "Fichas",    image: UIImage(systemName: "list.bullet.clipboard"), url: FitPlan.sheetsURL),
-        HotwireTab(id: "shares",    title: "Partilhar", image: UIImage(systemName: "square.and.arrow.up"),   url: FitPlan.sharesURL),
-        HotwireTab(id: "dashboard", title: "Dashboard", image: UIImage(systemName: "chart.bar"),             url: FitPlan.dashboardURL),
-        HotwireTab(id: "social",    title: "Social",    image: UIImage(systemName: "person.2"),              url: FitPlan.socialURL),
-        HotwireTab(id: "profile",   title: "Perfil",    image: UIImage(systemName: "person.crop.circle"),    url: FitPlan.profileURL)
+        HotwireTab(id: "sheets",    title: String(localized: "Sheets"),    image: UIImage(systemName: "list.bullet.clipboard"), url: FitPlan.sheetsURL),
+        HotwireTab(id: "shares",    title: String(localized: "Shares"),    image: UIImage(systemName: "square.and.arrow.up"),   url: FitPlan.sharesURL),
+        HotwireTab(id: "dashboard", title: String(localized: "Dashboard"), image: UIImage(systemName: "chart.bar"),             url: FitPlan.dashboardURL),
+        HotwireTab(id: "social",    title: String(localized: "Social"),    image: UIImage(systemName: "person.2"),              url: FitPlan.socialURL),
+        HotwireTab(id: "profile",   title: String(localized: "Profile"),   image: UIImage(systemName: "person.crop.circle"),    url: FitPlan.profileURL)
     ]
 }
 
