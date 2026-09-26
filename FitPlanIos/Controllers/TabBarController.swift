@@ -84,9 +84,18 @@ final class TabBarController: HotwireTabBarController {
         }
     }
 
+    /// Sends a tab back to its start page. When the start page is already at the
+    /// root, pop back to it and refresh it; otherwise (e.g. the tab landed on
+    /// /welcome) replace the root with the start page.
     private func reset(_ tab: HotwireTab) {
-        guard let navigator = navigator(for: tab), !navigator.rootViewController.viewControllers.isEmpty else { return }
-        navigator.route(tab.url)
+        guard let navigator = navigator(for: tab),
+              let root = navigator.rootViewController.viewControllers.first else { return }
+
+        if let root = root as? VisitableViewController, isStartPage(root.currentVisitableURL, of: tab) {
+            navigator.clearAll(animated: true)
+        } else {
+            navigator.route(tab.url)
+        }
     }
 
     private func currentSessionToken(_ completion: @escaping (String?) -> Void) {
