@@ -1,5 +1,5 @@
 import Foundation
-import Strada
+import HotwireNative
 import UIKit
 
 final class MenuComponent: BridgeComponent {
@@ -18,7 +18,7 @@ final class MenuComponent: BridgeComponent {
     // MARK: Private
 
     private var viewController: UIViewController? {
-        delegate.destination as? UIViewController
+        delegate?.destination as? UIViewController
     }
 
     private func handleDisplayEvent(message: Message) {
@@ -38,7 +38,7 @@ final class MenuComponent: BridgeComponent {
             alertController.addAction(action)
         }
 
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let cancelAction = UIAlertAction(title: String(localized: "Cancel"), style: .cancel)
         alertController.addAction(cancelAction)
 
         viewController?.present(alertController, animated: true)

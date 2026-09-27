@@ -1,5 +1,5 @@
 import Foundation
-import Strada
+import HotwireNative
 import UIKit
 
 final class NavButtonComponent: BridgeComponent {
@@ -24,7 +24,7 @@ final class NavButtonComponent: BridgeComponent {
     private weak var navBarButtonItem: UIBarButtonItem?
 
     private var viewController: UIViewController? {
-        delegate.destination as? UIViewController
+        delegate?.destination as? UIViewController
     }
 
     private func handleConnectEvent(message: Message) {

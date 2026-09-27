@@ -1,0 +1,127 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "Cancel": {
+      "comment": "Button that dismisses a menu or declines a web confirmation dialog",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
+          }
+        }
+      }
+    },
+    "Close": {
+      "comment": "Button that dismisses a web alert",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fechar"
+          }
+        }
+      }
+    },
+    "Dashboard": {
+      "comment": "Tab bar item",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Painel"
+          }
+        }
+      }
+    },
+    "Error loading page": {
+      "comment": "Title of the screen shown when a page fails to load",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erro ao carregar a página"
+          }
+        }
+      }
+    },
+    "Numbers": {
+      "comment": "Title of the native numbers demo screen",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Números"
+          }
+        }
+      }
+    },
+    "OK": {
+      "comment": "Button that accepts a web confirmation dialog",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Profile": {
+      "comment": "Tab bar item",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Perfil"
+          }
+        }
+      }
+    },
+    "Retry": {
+      "comment": "Button that reloads a page that failed to load",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tentar novamente"
+          }
+        }
+      }
+    },
+    "Shares": {
+      "comment": "Tab bar item",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compartilhar"
+          }
+        }
+      }
+    },
+    "Sheets": {
+      "comment": "Tab bar item",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fichas"
+          }
+        }
+      }
+    },
+    "Social": {
+      "comment": "Tab bar item",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Social"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

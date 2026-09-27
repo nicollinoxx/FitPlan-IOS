@@ -1,6 +1,9 @@
+import HotwireNative
 import SwiftUI
 
-class NumbersViewController: UIHostingController<NumbersView> {
+class NumbersViewController: UIHostingController<NumbersView>, PathConfigurationIdentifiable {
+    static var pathConfigurationIdentifier: String { "numbers" }
+
     convenience init(title: String) {
         self.init(rootView: NumbersView())
         self.title = title
