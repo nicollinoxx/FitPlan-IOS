@@ -10,6 +10,9 @@ enum FitPlan {
     // Cookie the Rails app stores the signed-in session under (see SessionsController).
     static let sessionCookie = "session_token"
 
+    // Cookie the Rails app reports the language it is rendering in (see ApplicationController).
+    static let localeCookie = "locale"
+
     // Start location of each tab. Every path below is a real top-level route of
     // the FitPlan Rails app (see its config/routes.rb).
     static var sheetsURL:    URL { baseURL.appendingPathComponent("sheets") }
