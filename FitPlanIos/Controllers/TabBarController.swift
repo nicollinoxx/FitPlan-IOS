@@ -17,8 +17,14 @@ extension HotwireTab {
 /// app has on top of that.
 final class TabBarController: HotwireTabBarController {
 
-    // Rails session each tab last rendered under, used to detect sign in/out.
-    private var renderedSessionTokens: [HotwireTab.ID: String?] = [:]
+    // What each tab last rendered under, used to detect a sign in, a sign out
+    // or a change of language.
+    private var renderedPages: [HotwireTab.ID: RenderedPage] = [:]
+
+    private struct RenderedPage: Equatable {
+        let sessionToken: String?
+        let locale: String?
+    }
 
     /// Selects the tab whose start page is `url`, when the visit comes from the
     /// tab on screen. Returns whether a tab was selected.
@@ -28,7 +34,7 @@ final class TabBarController: HotwireTabBarController {
               let current = currentTab, target != HotwireTab.all.firstIndex(of: current) else { return false }
 
         navigator.rootViewController.dismiss(animated: true)
-        resetIfSessionChanged(HotwireTab.all[target])
+        resetIfOutOfDate(HotwireTab.all[target])
 
         if #available(iOS 18.0, *) {
             selectedTab = tabs[target]
@@ -40,12 +46,12 @@ final class TabBarController: HotwireTabBarController {
         return true
     }
 
-    /// Records the Rails session a tab's page rendered under. Called by every
-    /// page on the tabs' main stacks, so the record always matches what the tab
-    /// is showing -- even when signing in from one tab switches to another.
+    /// Records what a tab's page rendered under. Called by every page on the
+    /// tabs' main stacks, so the record always matches what the tab is showing
+    /// -- even when signing in from one tab switches to another.
     func pageDidRender(in navigationController: UINavigationController) {
         guard let tab = HotwireTab.all.first(where: { navigator(for: $0)?.rootViewController === navigationController }) else { return }
-        currentSessionToken { [weak self] in self?.renderedSessionTokens[tab.id] = $0 }
+        currentPage { [weak self] in self?.renderedPages[tab.id] = $0 }
     }
 
     // MARK: - Private
@@ -71,18 +77,18 @@ final class TabBarController: HotwireTabBarController {
             return false
         }
 
-        resetIfSessionChanged(tab)
+        resetIfOutOfDate(tab)
         return true
     }
 
-    /// Each tab keeps whatever page it landed on, so signing in or out leaves the
-    /// other tabs showing the previous session. Comparing the Rails session
-    /// cookie the tab rendered under against the current one detects exactly
-    /// that, and only then is the tab sent back to its start page -- so tabs
-    /// otherwise keep their history.
-    private func resetIfSessionChanged(_ tab: HotwireTab) {
-        currentSessionToken { [weak self] token in
-            guard let self, let renderedSessionToken = renderedSessionTokens[tab.id], renderedSessionToken != token else { return }
+    /// Each tab keeps whatever page it landed on, so signing in or out, or
+    /// picking another language, leaves the other tabs on the previous one.
+    /// Comparing the cookies the tab rendered under against the current ones
+    /// detects exactly that, and only then is the tab sent back to its start
+    /// page -- so tabs otherwise keep their history.
+    private func resetIfOutOfDate(_ tab: HotwireTab) {
+        currentPage { [weak self] page in
+            guard let self, let rendered = renderedPages[tab.id], rendered != page else { return }
             reset(tab)
         }
     }
@@ -101,9 +107,10 @@ final class TabBarController: HotwireTabBarController {
         }
     }
 
-    private func currentSessionToken(_ completion: @escaping (String?) -> Void) {
+    private func currentPage(_ completion: @escaping (RenderedPage) -> Void) {
         WKWebsiteDataStore.default().httpCookieStore.getAllCookies { cookies in
-            completion(cookies.first { $0.name == FitPlan.sessionCookie }?.value)
+            let value = { (name: String) -> String? in cookies.first { $0.name == name }?.value }
+            completion(RenderedPage(sessionToken: value(FitPlan.sessionCookie), locale: value(FitPlan.localeCookie)))
         }
     }
 }
