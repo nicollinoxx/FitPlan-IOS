@@ -3,13 +3,14 @@ import UIKit
 import WebKit
 
 extension HotwireTab {
-    static let all = [
-        HotwireTab(id: "sheets",    title: String(localized: "Sheets"),    image: UIImage(systemName: "list.bullet.clipboard"), url: FitPlan.sheetsURL),
-        HotwireTab(id: "shares",    title: String(localized: "Shares"),    image: UIImage(systemName: "square.and.arrow.up"),   url: FitPlan.sharesURL),
-        HotwireTab(id: "dashboard", title: String(localized: "Dashboard"), image: UIImage(systemName: "chart.bar"),             url: FitPlan.dashboardURL),
-        HotwireTab(id: "social",    title: String(localized: "Social"),    image: UIImage(systemName: "person.2"),              url: FitPlan.socialURL),
-        HotwireTab(id: "profile",   title: String(localized: "Profile"),   image: UIImage(systemName: "person.crop.circle"),    url: FitPlan.profileURL)
-    ]
+    // Built on every use so the titles follow AppLanguage.
+    static var all: [HotwireTab] {[
+        HotwireTab(id: "sheets",    title: String(localized: "Sheets", bundle: AppLanguage.bundle),    image: UIImage(systemName: "list.bullet.clipboard"), url: FitPlan.sheetsURL),
+        HotwireTab(id: "shares",    title: String(localized: "Shares", bundle: AppLanguage.bundle),    image: UIImage(systemName: "square.and.arrow.up"),   url: FitPlan.sharesURL),
+        HotwireTab(id: "dashboard", title: String(localized: "Dashboard", bundle: AppLanguage.bundle), image: UIImage(systemName: "chart.bar"),             url: FitPlan.dashboardURL),
+        HotwireTab(id: "social",    title: String(localized: "Social", bundle: AppLanguage.bundle),    image: UIImage(systemName: "person.2"),              url: FitPlan.socialURL),
+        HotwireTab(id: "profile",   title: String(localized: "Profile", bundle: AppLanguage.bundle),   image: UIImage(systemName: "person.crop.circle"),    url: FitPlan.profileURL)
+    ]}
 }
 
 /// Root of the app. Hotwire Native gives every tab its own `Navigator`, with
@@ -51,7 +52,15 @@ final class TabBarController: HotwireTabBarController {
     /// -- even when signing in from one tab switches to another.
     func pageDidRender(in navigationController: UINavigationController) {
         guard let tab = HotwireTab.all.first(where: { navigator(for: $0)?.rootViewController === navigationController }) else { return }
-        currentPage { [weak self] in self?.renderedPages[tab.id] = $0 }
+        currentPage { [weak self] page in
+            self?.renderedPages[tab.id] = page
+            self?.followLanguage(of: page)
+        }
+    }
+
+    /// Puts the tab titles in the language picked before the app was last closed.
+    func followAppLanguage() {
+        currentPage { [weak self] in self?.followLanguage(of: $0) }
     }
 
     // MARK: - Private
@@ -104,6 +113,20 @@ final class TabBarController: HotwireTabBarController {
             navigator.clearAll(animated: true)
         } else {
             navigator.route(tab.url)
+        }
+    }
+
+    /// The tab titles are the app's own, so they would otherwise stay in the
+    /// device's language when another one is picked on the web.
+    private func followLanguage(of page: RenderedPage) {
+        AppLanguage.use(page.locale)
+
+        for tab in HotwireTab.all {
+            if #available(iOS 18.0, *) {
+                tabs.first { $0.identifier == tab.id }?.title = tab.title
+            } else {
+                navigator(for: tab)?.rootViewController.tabBarItem.title = tab.title
+            }
         }
     }
 

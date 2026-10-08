@@ -16,14 +16,14 @@ final class LocalizedUIController: WKUIController {
 
     override func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
         let alert = UIAlertController(title: message, message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: String(localized: "Close"), style: .default) { _ in completionHandler() })
+        alert.addAction(UIAlertAction(title: String(localized: "Close", bundle: AppLanguage.bundle), style: .default) { _ in completionHandler() })
         present(alert, otherwise: completionHandler)
     }
 
     override func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
         let alert = UIAlertController(title: message, message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default) { _ in completionHandler(true) })
-        alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel) { _ in completionHandler(false) })
+        alert.addAction(UIAlertAction(title: String(localized: "OK", bundle: AppLanguage.bundle), style: .default) { _ in completionHandler(true) })
+        alert.addAction(UIAlertAction(title: String(localized: "Cancel", bundle: AppLanguage.bundle), style: .cancel) { _ in completionHandler(false) })
         present(alert) { completionHandler(false) }
     }
 
@@ -44,7 +44,7 @@ struct LocalizedErrorView: ErrorPresentableView {
                 .font(.system(size: 38, weight: .semibold))
                 .foregroundColor(.accentColor)
 
-            Text("Error loading page")
+            Text("Error loading page", bundle: AppLanguage.bundle)
                 .font(.largeTitle)
 
             Text(error.localizedDescription)
@@ -52,7 +52,7 @@ struct LocalizedErrorView: ErrorPresentableView {
                 .multilineTextAlignment(.center)
 
             if let handler {
-                Button("Retry", action: handler)
+                Button(action: handler) { Text("Retry", bundle: AppLanguage.bundle) }
                     .font(.system(size: 17, weight: .bold))
             }
         }

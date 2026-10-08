@@ -38,7 +38,7 @@ final class MenuComponent: BridgeComponent {
             alertController.addAction(action)
         }
 
-        let cancelAction = UIAlertAction(title: String(localized: "Cancel"), style: .cancel)
+        let cancelAction = UIAlertAction(title: String(localized: "Cancel", bundle: AppLanguage.bundle), style: .cancel)
         alertController.addAction(cancelAction)
 
         viewController?.present(alertController, animated: true)

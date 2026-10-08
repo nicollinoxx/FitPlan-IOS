@@ -26,6 +26,7 @@ extension SceneDelegate: UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
 
         tabBarController.load(HotwireTab.all)
+        tabBarController.followAppLanguage()
 
         for tab in HotwireTab.all {
             guard let navigator = tabBarController.navigator(for: tab) else { continue }
@@ -49,7 +50,7 @@ extension SceneDelegate: NavigatorDelegate {
 
         switch proposal.viewController {
         case NumbersViewController.pathConfigurationIdentifier:
-            return .acceptCustom(NumbersViewController(title: String(localized: "Numbers")))
+            return .acceptCustom(NumbersViewController(title: String(localized: "Numbers", bundle: AppLanguage.bundle)))
         default:
             return .accept
         }
