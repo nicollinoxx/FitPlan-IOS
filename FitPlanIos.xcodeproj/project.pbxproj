@@ -13,6 +13,7 @@
 		5D91C5402AC538960046D872 /* FlashMessageComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D91C53F2AC538960046D872 /* FlashMessageComponent.swift */; };
 		5DA9C92F2AC7E38100FEA7E6 /* MenuComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA9C92E2AC7E38100FEA7E6 /* MenuComponent.swift */; };
 		5DAF71B72AC3FB53002D04FE /* UIViewController+Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DAF71B62AC3FB53002D04FE /* UIViewController+Toast.swift */; };
+		5DF1A0B12EC5A00000B529A0 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF1A0B02EC5A00000B529A0 /* AppLanguage.swift */; };
 		5DF1A0112EC5A00000B529A0 /* HotwireLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF1A0102EC5A00000B529A0 /* HotwireLocalization.swift */; };
 		5DF1A0132EC5A00000B529A0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5DF1A0122EC5A00000B529A0 /* Localizable.xcstrings */; };
 		5DF1A0152EC5A00000B529A0 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 5DF1A0142EC5A00000B529A0 /* InfoPlist.xcstrings */; };
@@ -36,6 +37,7 @@
 		5D91C53F2AC538960046D872 /* FlashMessageComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashMessageComponent.swift; sourceTree = "<group>"; };
 		5DA9C92E2AC7E38100FEA7E6 /* MenuComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuComponent.swift; sourceTree = "<group>"; };
 		5DAF71B62AC3FB53002D04FE /* UIViewController+Toast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Toast.swift"; sourceTree = "<group>"; };
+		5DF1A0B02EC5A00000B529A0 /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
 		5DF1A0102EC5A00000B529A0 /* HotwireLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotwireLocalization.swift; sourceTree = "<group>"; };
 		5DF1A0122EC5A00000B529A0 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		5DF1A0142EC5A00000B529A0 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				5DAF71B62AC3FB53002D04FE /* UIViewController+Toast.swift */,
+				5DF1A0B02EC5A00000B529A0 /* AppLanguage.swift */,
 				5DF1A0102EC5A00000B529A0 /* HotwireLocalization.swift */,
 			);
 			path = Extensions;
@@ -244,6 +247,7 @@
 				5D281BB62ABC0CB9001CE599 /* FormComponent.swift in Sources */,
 				5DF1A0012EC5A00000B529A0 /* TabBarController.swift in Sources */,
 				5DAF71B72AC3FB53002D04FE /* UIViewController+Toast.swift in Sources */,
+				5DF1A0B12EC5A00000B529A0 /* AppLanguage.swift in Sources */,
 				5DF1A0112EC5A00000B529A0 /* HotwireLocalization.swift in Sources */,
 				5DCC50D62A959DF900B529A0 /* SceneDelegate.swift in Sources */,
 				5D281BB42ABC0CB0001CE599 /* BridgeComponent+App.swift in Sources */,
